@@ -1,5 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
+import { sizes } from '../../enums/size.enum';
 import { UploadService } from '../../services/upload/upload.service';
 import { UserVideo } from '../../services/upload/user-video';
 
@@ -11,6 +12,7 @@ import { UserVideo } from '../../services/upload/user-video';
 export class UploadDialogComponent implements OnInit {
 	@ViewChild('fileInput') fileInput!: ElementRef;
 	file: File | null = null;
+	fileTooBig: boolean = false;
 
 	constructor(
 		private uploadService: UploadService,
@@ -26,6 +28,8 @@ export class UploadDialogComponent implements OnInit {
 	fileChange(event: Event) {
 		const files: FileList = (event as any).target?.files;
 		if (files.length > 0) {
+			this.fileTooBig = files[0]?.size > sizes.maxSize;
+			if(this.fileTooBig) return;
 			this.file = files[0];
 		}
 	}

@@ -8,6 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { UploadService } from '../../services/upload/upload.service';
 import { UserVideo } from '../../services/upload/user-video';
 import { of } from 'rxjs';
+import { sizes } from '../../enums/size.enum';
 
 describe('UploadDialogComponent', () => {
 	let component: UploadDialogComponent;
@@ -33,6 +34,28 @@ describe('UploadDialogComponent', () => {
 
 	it('should create', () => {
 		expect(component).toBeTruthy();
+	});
+
+	describe('fileChange', () => {
+		it('should fail to upload if a file was chosen and a file exceeded the max size', () => {
+			expect(component.fileTooBig).toBeFalse();
+			const event = {target: { files: [{size: sizes.maxSize + 1} as File]}} as unknown as Event;
+
+			component.fileChange(event);
+
+			expect(component.fileTooBig).toBeTrue();
+			expect(component.file).toBeNull();
+		});
+
+		it('should prepare the file to be uploaded if is less than the max size', () => {
+			const fakeFile = {size: sizes.maxSize} as File;
+			const event = {target: { files: [fakeFile]}} as unknown as Event;
+
+			component.fileChange(event);
+
+			expect(component.fileTooBig).toBeFalse();
+			expect(component.file).toEqual(fakeFile);
+		});
 	});
 
 	describe('upload', () => {

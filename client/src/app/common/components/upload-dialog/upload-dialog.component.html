@@ -6,6 +6,7 @@
 	</button>
 	<p class="selected-file" *ngIf="file">{{ file.name }}</p>
 	<input type="file" name="file" id="file-upload" #fileInput (change)="fileChange($event)" />
+	<span class="red" *ngIf="fileTooBig">File size cannot exceed 50MB.</span>
 </mat-dialog-content>
 <mat-dialog-actions>
 	<button mat-button [mat-dialog-close]>Cancel</button>
