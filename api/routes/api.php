@@ -14,6 +14,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('video/{video}', [VideoController::class, 'getVideo']);
-Route::get('video', [VideoController::class, 'getAllVideos']);
-Route::post('video', [VideoController::class, 'saveVideo']);
+Route::get('videos/{video}', [VideoController::class, 'getVideo']);
+Route::get('videos', [VideoController::class, 'getAllVideos']);
+Route::post('videos', [VideoController::class, 'saveVideo']);
