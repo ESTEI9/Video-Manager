@@ -31,7 +31,8 @@ export class UploadDialogComponent implements OnInit {
 	}
 
 	upload() {
-		this.uploadService.upload(this.file!).subscribe((result: UserVideo) => {
+		if(this.file instanceof File)
+		this.uploadService.upload(this.file).subscribe((result: UserVideo) => {
 			this.dialogRef.close(result);
 		});
 	}
