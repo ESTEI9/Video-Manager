@@ -23,6 +23,28 @@ class VideoController extends Controller
 	public function saveVideo (Request $req): VideoResource
 	{
 		$path = Storage::putFile('storage', $req->file('video'));
-		return VideoResource::make(Video::create(['path' => $path]));
+		$title = $req->input('title');
+		$description = $req->input('description');
+		$tags = $req->input('tags');
+
+		return VideoResource::make(Video::create(['path' => $path, 'title' => $title, 'description' => $description, 'tags' => $tags]));
+	}
+
+	public function editVideo (Request $req): VideoResource
+	{
+		$id = $req->input('id');
+		$title = $req->input('title');
+		$description = $req->input('description');
+		$tags = $req->input('tags');
+
+		$video = Video::find(1);
+		$video->title = $title;
+		$video->description = $description ?? NULL;
+		$video->tags = $tags ?? NULL;
+		$video->save();
+
+		$video->tags = explode(',', $tags);
+
+		return VideoResource::make($video);
 	}
 }

@@ -20,7 +20,10 @@ class VideoResource extends JsonResource
 
 		return [
 			'id' => $video->id,
-			'path' => config('app.url') . '/' . $video->path
+			'path' => config('app.url') . '/' . $video->path,
+			'title' => $video->title,
+			'description' => $video->description,
+			'tags' => $video->tags
 		];
 	}
 }

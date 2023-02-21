@@ -16,6 +16,9 @@ class AddVideoTable extends Migration
 		Schema::create('videos', function (Blueprint $table) {
 			$table->id();
 			$table->string('path');
+			$table->string('title');
+			$table->string('description')->nullable();
+			$table->string('tags')->nullable();
 			$table->timestamps();
 		});
 	}

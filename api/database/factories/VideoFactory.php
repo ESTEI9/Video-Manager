@@ -14,7 +14,10 @@ class VideoFactory extends Factory
 	{
 		return [
 			'id' => $this->faker->numberBetween(1, 100),
-			'path' => 'storage/' . $this->faker->uuid() . '.mp4'
+			'path' => 'storage/' . $this->faker->uuid() . '.mp4',
+			'title' => $this->faker->uuid(),
+			'description' => '',
+			'tags' => ''
 		];
 	}
 }
