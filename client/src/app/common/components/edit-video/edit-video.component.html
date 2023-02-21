@@ -1,0 +1,21 @@
+<h2 mat-dialog-title>Edit Video</h2>
+<mat-dialog-content>
+	<div class="control">
+		<label>Title<sup>*</sup></label>
+		<input type="text" [(ngModel)]="title">
+		<span class="error" *ngIf="title.length === 0">Video must have a title.</span>
+	</div>
+	<div class="control">
+		<label>Tags</label>
+		<span class="label-description">Split tags by comma (,)</span>
+		<input type="text" [(ngModel)]="tags">
+	</div>
+	<div class="control">
+		<label>Description</label>
+		<textarea [(ngModel)]="description"></textarea>
+	</div>
+</mat-dialog-content>
+<mat-dialog-actions>
+	<button mat-button [mat-dialog-close]>Cancel</button>
+	<button mat-flat-button color="primary" (click)="save()" [disabled]="title.length === 0">Save</button>
+</mat-dialog-actions>

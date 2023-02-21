@@ -1,0 +1,7 @@
+@import '/src/assets/controls';
+
+:host {
+	display: flex;
+	flex-direction: column;
+	min-width: 400px;
+}

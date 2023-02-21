@@ -7,8 +7,22 @@
 </mat-toolbar>
 <main class="videos">
 	<section class="video" *ngFor="let video of videos$ | async">
-		<video class="video-player" controls>
-			<source src="{{ video.path }}" type="video/mp4" />
-		</video>
+		<mat-card>
+			<mat-card-header>
+				<mat-card-title>{{video.title}}</mat-card-title>
+				<button mat-icon-button matTooltip="Edit video" color="primary" (click)="editVideo(video)">
+					<mat-icon>edit</mat-icon>
+				</button>
+			</mat-card-header>
+		<mat-card-content>
+			<video class="video-player" controls>
+				<source src="{{ video.path }}" type="video/mp4" />
+			</video>
+			<ul class="tags">
+				<li *ngFor="let tag of video.tags">{{tag}}</li>
+			</ul>
+			<div class="description">{{video.description}}</div>
+		</mat-card-content>
+		</mat-card>
 	</section>
 </main>

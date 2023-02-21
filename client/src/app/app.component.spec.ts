@@ -9,7 +9,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { of } from 'rxjs';
 
 import { AppComponent } from './app.component';
-import { UserVideo } from './common/services/upload/user-video';
+import { UserVideo } from './common/types/user-video';
 import { UploadService } from './common/services/upload/upload.service';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 

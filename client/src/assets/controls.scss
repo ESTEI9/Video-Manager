@@ -1,0 +1,21 @@
+.error { color: red; font-size: 12px; }
+
+.control {
+	label { display: block };
+	
+	.label-description {
+		font-size: 12px;
+		font-style: italic;
+	}
+
+	input, textarea {
+		width: calc(100% - 20px);
+		margin-bottom: 5px;
+		padding: 10px;
+	}
+
+	textarea {
+		resize: vertical;
+		max-height: 200px;
+	}
+}

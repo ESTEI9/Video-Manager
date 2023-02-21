@@ -1,10 +1,11 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { filter, mergeMap, Observable, of, scan, shareReplay, startWith, Subject, tap } from 'rxjs';
+import { filter, mergeMap, Observable, of, scan, shareReplay, startWith, Subject, tap, map, switchMap } from 'rxjs';
+import { EditVideoComponent } from './common/components/edit-video/edit-video.component';
 import { UploadDialogComponent } from './common/components/upload-dialog/upload-dialog.component';
 import { UploadService } from './common/services/upload/upload.service';
-import { UserVideo } from './common/services/upload/user-video';
+import { UserVideo } from './common/types/user-video';
 
 @Component({
 	selector: 'app-root',
@@ -12,9 +13,10 @@ import { UserVideo } from './common/services/upload/user-video';
 	styleUrls: ['./app.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AppComponent implements OnInit {
-	videos$: Observable<UserVideo[]> = of([]);
+export class AppComponent implements OnInit, OnDestroy {
+	videos$: Subject<UserVideo[]> = new Subject<UserVideo[]>();
 	upload$: Subject<UserVideo> = new Subject<UserVideo>();
+	videos: any[] = [];
 
 	constructor(
 		private dialog: MatDialog,
@@ -27,7 +29,7 @@ export class AppComponent implements OnInit {
 	}
 
 	refreshVideos() {
-		this.videos$ = this.upload.getVideos().pipe(
+		this.upload.getVideos().pipe(
 			// Transforms the cold observable to a hot observable, meaning we only do the network request once
 			shareReplay(),
 
@@ -38,8 +40,14 @@ export class AppComponent implements OnInit {
 					scan((videos, newUpload) => videos.concat(newUpload), existingVideos),
 					startWith(existingVideos)
 				);
+			}),
+			map((videos: UserVideo[]) => {
+				this.videos = videos.map(video => {
+					return {...video, tags: (video.tags)?.split(',')}
+				});
+				this.videos$.next(this.videos);
 			})
-		);
+		).subscribe();
 	}
 
 	openUpload() {
@@ -67,6 +75,27 @@ export class AppComponent implements OnInit {
 
 				// No need to unsubscribe because afterClosed emits complete that will clean up this subscription
 			)
-			.subscribe((result: UserVideo) => this.upload$.next(result));
+			.subscribe((result: UserVideo) => { if(typeof result !== 'undefined') this.upload$.next(result) });
+	}
+
+	editVideo(video: UserVideo) {
+		const dialogRef = this.dialog.open<EditVideoComponent, UserVideo, UserVideo>(EditVideoComponent, {data: video });
+		dialogRef.afterClosed().pipe(
+			switchMap((video: UserVideo | undefined): Observable<UserVideo> => {
+				if(typeof video === 'undefined') return of();
+				return this.upload.edit(video as UserVideo);
+			})
+		).subscribe((video: UserVideo) => {
+			this.videos = this.videos.map((currentVideo: UserVideo) => {
+				if(currentVideo.id === video.id) return video;
+				return currentVideo;
+			});
+			this.videos$.next(this.videos as UserVideo[]);
+			this.snackbar.open('Updated Video', undefined, { duration: 4000});
+		})
+	}
+
+	ngOnDestroy(): void {
+		this.videos$.complete();
 	}
 }
