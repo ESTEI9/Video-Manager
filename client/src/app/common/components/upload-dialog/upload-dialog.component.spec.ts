@@ -6,7 +6,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { UploadDialogComponent } from './upload-dialog.component';
 import { MatIconModule } from '@angular/material/icon';
 import { UploadService } from '../../services/upload/upload.service';
-import { UserVideo } from '../../services/upload/user-video';
+import { UserVideo } from '../../types/user-video';
 import { of } from 'rxjs';
 import { sizes } from '../../enums/size.enum';
 
@@ -60,9 +60,10 @@ describe('UploadDialogComponent', () => {
 
 	describe('upload', () => {
 		it('should call the upload.service upload method, close the dialog when finished, if a file was chosen', () => {
+			component.title = 'Bogus';
 			component.file = new File([''], 'bogusFile', { type: 'text/html' });
 			spyOn(uploadService, 'upload').and.returnValue(
-				of({ id: 1, path: 'bogus/path' } as UserVideo)
+				of({ id: 1, path: 'bogus/path', title: 'Bogus' } as UserVideo)
 			);
 			fixture.detectChanges();
 
@@ -73,9 +74,10 @@ describe('UploadDialogComponent', () => {
 		});
 
 		it('should do nothing when calling the upload.service upload method if no file was chosen', () => {
+			component.title = 'Bogus';
 			component.file = null;
 			spyOn(uploadService, 'upload').and.returnValue(
-				of({ id: 1, path: 'bogus/path' } as UserVideo)
+				of({ id: 1, path: 'bogus/path', title: 'Bogus' } as UserVideo)
 			);
 			fixture.detectChanges();
 

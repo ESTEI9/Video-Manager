@@ -2,7 +2,8 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { sizes } from '../../enums/size.enum';
 import { UploadService } from '../../services/upload/upload.service';
-import { UserVideo } from '../../services/upload/user-video';
+import { UserVideo } from '../../types/user-video';
+import { MetaData } from '../../types/metadata';
 
 @Component({
 	selector: 'app-upload-dialog',
@@ -12,6 +13,9 @@ import { UserVideo } from '../../services/upload/user-video';
 export class UploadDialogComponent implements OnInit {
 	@ViewChild('fileInput') fileInput!: ElementRef;
 	file: File | null = null;
+	title: string = '';
+	description: string = '';
+	tags: string = '';
 	fileTooBig: boolean = false;
 
 	constructor(
@@ -30,14 +34,18 @@ export class UploadDialogComponent implements OnInit {
 		if (files.length > 0) {
 			this.fileTooBig = files[0]?.size > sizes.maxSize;
 			if(this.fileTooBig) return;
+			this.title = files[0].name;
 			this.file = files[0];
 		}
 	}
 
 	upload() {
-		if(this.file instanceof File)
-		this.uploadService.upload(this.file).subscribe((result: UserVideo) => {
-			this.dialogRef.close(result);
-		});
+		if (this.title.length > 0) {
+			const metadata: MetaData = { title: this.title, description: this.description, tags: this.tags.replace(/(?<=,)\s/g,'')};
+			if(this.file instanceof File)
+			this.uploadService.upload(this.file!, metadata).subscribe((result: UserVideo) => {
+				this.dialogRef.close(result);
+			});
+		}
 	}
 }

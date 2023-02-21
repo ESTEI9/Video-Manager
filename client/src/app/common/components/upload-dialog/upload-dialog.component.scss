@@ -1,3 +1,5 @@
+@import '/src/assets/controls';
+
 :host {
 	display: flex;
 	flex-direction: column;
@@ -41,8 +43,6 @@
 	font-size: 19px;
 	max-width: 350px;
 }
-
-.red { color: red; }
 
 #file-upload {
 	position: absolute;

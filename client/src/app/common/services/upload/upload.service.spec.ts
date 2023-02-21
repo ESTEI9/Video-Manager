@@ -3,6 +3,8 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 
 import { environment } from '../../../../environments/environment';
 import { UploadService } from './upload.service';
+import { MetaData } from '../../types/metadata';
+import { UserVideo } from '../../types/user-video';
 
 describe('UploadService', () => {
 	let http: HttpTestingController;
@@ -38,13 +40,28 @@ describe('UploadService', () => {
 	describe('POST', () => {
 		it('should call the correct endpoint when uploading a video', () => {
 			const fileBlob = new File([''], 'bogusFile', { type: 'text/html' });
-			service.upload(fileBlob).subscribe((video) => {
+			const metaData: MetaData = {title: 'Bogus', description: 'Bogus Description'};
+			service.upload(fileBlob, metaData).subscribe((video) => {
 				expect(video.id).toBe(1);
 				expect(video.path).toBe('bogus/path');
+				expect(video.title).toBe('Bogus');
 			});
 			const req = http.expectOne(`${environment.apiBaseUrl}/videos`);
 			expect(req.request.method).toBe('POST');
-			req.flush({ id: 1, path: 'bogus/path' });
+			req.flush({ id: 1, path: 'bogus/path', title: 'Bogus', description: 'Bogus Description' });
+			http.verify();
+		});
+
+		it('should call the correct endpoint when editing a video', () => {
+			const video = { id: 1, path: 'bogus/path', title: 'Bogus Title'} as UserVideo;
+			service.edit(video).subscribe((video) => {
+				expect(video.id).toBe(1);
+				expect(video.path).toBe('bogus/path');
+				expect(video.title).toBe('Bogus Title');
+			});
+			const req = http.expectOne(`${environment.apiBaseUrl}/edit`);
+			expect(req.request.method).toBe('POST');
+			req.flush({ id: 1, path: 'bogus/path', title: 'Bogus Title'});
 			http.verify();
 		});
 	});

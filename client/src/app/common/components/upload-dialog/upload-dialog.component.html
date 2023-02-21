@@ -6,9 +6,23 @@
 	</button>
 	<p class="selected-file" *ngIf="file">{{ file.name }}</p>
 	<input type="file" name="file" id="file-upload" #fileInput (change)="fileChange($event)" />
-	<span class="red" *ngIf="fileTooBig">File size cannot exceed 50MB.</span>
+	<span class="error" *ngIf="fileTooBig">File size cannot exceed 50MB.</span>
+	<div class="control">
+		<label>Title<sup>*</sup></label>
+		<input type="text" [(ngModel)]="title">
+		<span class="error" *ngIf="title.length === 0 && file">Video must have a title.</span>
+	</div>
+	<div class="control">
+		<label>Tags</label>
+		<span class="label-description">Split tags by comma (,)</span>
+		<input type="text" [(ngModel)]="tags">
+	</div>
+	<div class="control">
+		<label>Description</label>
+		<textarea [(ngModel)]="description"></textarea>
+	</div>
 </mat-dialog-content>
 <mat-dialog-actions>
 	<button mat-button [mat-dialog-close]>Cancel</button>
-	<button mat-flat-button color="primary" (click)="upload()">Upload</button>
+	<button mat-flat-button color="primary" (click)="upload()" [disabled]="title.length === 0">Upload</button>
 </mat-dialog-actions>
