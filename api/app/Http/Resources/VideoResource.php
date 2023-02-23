@@ -20,10 +20,12 @@ class VideoResource extends JsonResource
 
 		return [
 			'id' => $video->id,
+			'author' => $video->author,
 			'path' => config('app.url') . '/' . $video->path,
 			'title' => $video->title,
 			'description' => $video->description,
-			'tags' => $video->tags
+			'tags' => json_decode($video->tags),
+			'shared' => json_decode($video->shared)
 		];
 	}
 }

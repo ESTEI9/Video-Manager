@@ -15,19 +15,41 @@ class VideoController extends Controller
 		return VideoResource::make($video);
 	}
 
-	public function getAllVideos (): AnonymousResourceCollection
+	public function getVideos (int $author_id): AnonymousResourceCollection
 	{
-		return VideoResource::collection(Video::all());
+		$videos = Video::where('author', $author_id)->get();
+		
+		return VideoResource::collection($videos);
+	}
+
+	public function getSharedVideos(Request $req): AnonymousResourceCollection
+	{
+		$email = $req->input('email');
+		$videos = [];
+
+		if(strlen($email)) {
+			$videos = Video::where('shared', 'like', '%'.$email.'%')->get();
+			return VideoResource::collection($videos);
+		}
+		
+		return VideoResource::collection($videos);
 	}
 
 	public function saveVideo (Request $req): VideoResource
 	{
 		$path = Storage::putFile('storage', $req->file('video'));
+		$author = $req->input('author');
 		$title = $req->input('title');
 		$description = $req->input('description');
 		$tags = $req->input('tags');
 
-		return VideoResource::make(Video::create(['path' => $path, 'title' => $title, 'description' => $description, 'tags' => $tags]));
+		return VideoResource::make(Video::create([
+			'author' => $author,
+			'path' => $path,
+			'title' => $title,
+			'description' => $description,
+			'tags' => $tags
+		]));
 	}
 
 	public function editVideo (Request $req): VideoResource
@@ -37,13 +59,23 @@ class VideoController extends Controller
 		$description = $req->input('description');
 		$tags = $req->input('tags');
 
-		$video = Video::find(1);
+		$video = Video::find($id);
 		$video->title = $title;
 		$video->description = $description ?? NULL;
 		$video->tags = $tags ?? NULL;
 		$video->save();
 
-		$video->tags = explode(',', $tags);
+		return VideoResource::make($video);
+	}
+
+	public function shareVideo (Request $req): VideoResource
+	{
+		$video_id = $req->input('video');
+		$shared = $req->input('shared');
+
+		$video = Video::find($video_id);
+		$video->shared = $shared ?? null;
+		$video->save();
 
 		return VideoResource::make($video);
 	}

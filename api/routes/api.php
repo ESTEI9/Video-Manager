@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\VideoController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,6 +16,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('videos/{video}', [VideoController::class, 'getVideo']);
-Route::get('videos', [VideoController::class, 'getAllVideos']);
+Route::get('videos/user/{userid}', [VideoController::class, 'getVideos']);
+Route::post('shared', [VideoController::class, 'getSharedVideos']);
 Route::post('videos', [VideoController::class, 'saveVideo']);
 Route::post('edit', [VideoController::class, 'editVideo']);
+Route::post('share', [VideoController::class, 'shareVideo']);
+Route::post('login', [UserController::class, 'loginUser']);
+Route::post('createUser', [UserController::class, 'createUser']);

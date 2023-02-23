@@ -14,10 +14,12 @@ class VideoFactory extends Factory
 	{
 		return [
 			'id' => $this->faker->numberBetween(1, 100),
+			'author' => $this->faker->numberBetween(1, 100),
 			'path' => 'storage/' . $this->faker->uuid() . '.mp4',
-			'title' => $this->faker->uuid(),
+			'title' => $this->faker->word(),
 			'description' => '',
-			'tags' => ''
+			'tags' => json_encode(["'".$this->faker->word()."'"]),
+			'shared' => json_encode(["'".$this->faker->email()."'"])
 		];
 	}
 }

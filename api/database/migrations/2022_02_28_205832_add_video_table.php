@@ -15,10 +15,12 @@ class AddVideoTable extends Migration
 	{
 		Schema::create('videos', function (Blueprint $table) {
 			$table->id();
+			$table->integer('author');
 			$table->string('path');
 			$table->string('title');
 			$table->string('description')->nullable();
-			$table->string('tags')->nullable();
+			$table->json('tags')->nullable();
+			$table->json('shared')->nullable();
 			$table->timestamps();
 		});
 	}

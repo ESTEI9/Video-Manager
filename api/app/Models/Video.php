@@ -10,10 +10,12 @@ use Illuminate\Support\Carbon;
  * Video class
  *
  * @property int $id
+ * @property int $author
  * @property string $path
  * @property string $title
  * @property string $description
- * @property string $tags
+ * @property string[] $tags
+ * @property string[] $shared
  * @property Carbon $created_at
  * @property Carbon $updated_at
  */
@@ -22,5 +24,5 @@ class Video extends Model
 	use HasFactory;
 
 	protected $table = 'videos';
-	protected $fillable = ['path', 'title', 'description', 'tags'];
+	protected $fillable = ['path', 'title', 'description', 'tags', 'author', 'shared'];
 }
