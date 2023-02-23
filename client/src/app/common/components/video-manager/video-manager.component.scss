@@ -1,0 +1,22 @@
+.spacer {
+	flex: 1 1 auto;
+}
+
+h2 {
+    margin: 20px 0;
+}
+
+.videos {
+    margin: 0 16px;
+}
+
+.video-container {
+    display: flex;
+    flex-wrap: wrap;
+
+    app-video {
+        width: fit-content;
+        display: block;
+        margin: 10px;
+    }
+}

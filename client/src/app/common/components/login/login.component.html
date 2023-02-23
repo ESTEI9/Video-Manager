@@ -1,0 +1,27 @@
+<mat-toolbar color="primary">
+	<span>Video Manager</span>
+</mat-toolbar>
+<mat-card>
+    <mat-card-header>
+        <mat-card-title>Login</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+        <form [formGroup]="loginForm">
+            <div class="control">
+                <label for="email">Email</label>
+                <input type="text" formControlName="email">
+            </div>
+            <div class="control">
+                <label for="password">Password</label>
+                <input type="password" formControlName="password">
+            </div>
+        </form>
+    </mat-card-content>
+    <mat-card-actions>
+        <button mat-flat-button color="primary" (click)="login()" [disabled]="!loginForm.valid || loggingIn">
+            <span *ngIf="!loggingIn">Login</span>
+            <mat-spinner *ngIf="loggingIn" color="primary" diameter="20"></mat-spinner>
+        </button>
+        <button mat-flat-button (click)="signUp()" [disabled]="loggingIn">Sign Up</button>
+    </mat-card-actions>
+</mat-card>

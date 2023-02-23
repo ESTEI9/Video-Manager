@@ -10,8 +10,8 @@ import { UserVideo } from '../../types/user-video';
 export class EditVideoComponent {
 
   title: string
-  description: string | undefined;
-  tags: string | undefined;
+  description: string;
+  tags: string;
   video: UserVideo;
 
   constructor(
@@ -20,12 +20,12 @@ export class EditVideoComponent {
   ) {
     this.video = data;
     this.title = this.video.title;
-    this.description = this.video.description;
-    this.tags = this.video.tags;
+    this.description = this.video.description!;
+    this.tags = this.video.tags?.join(', ')!;
   }
 
   save() {
-    const video = { ...this.video, title: this.title, description: this.description, tags: this.tags };
+    const video = { ...this.video, title: this.title, description: this.description, tags: this.tags?.replace(/(?<=,)\s/g,'').split(',') };
     this.dialogRef.close(video);
   }
 }

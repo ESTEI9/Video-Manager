@@ -10,7 +10,7 @@
 	<div class="control">
 		<label>Title<sup>*</sup></label>
 		<input type="text" [(ngModel)]="title">
-		<span class="error" *ngIf="title.length === 0 && file">Video must have a title.</span>
+		<span class="error" *ngIf="!title && file">Video must have a title.</span>
 	</div>
 	<div class="control">
 		<label>Tags</label>
@@ -24,5 +24,8 @@
 </mat-dialog-content>
 <mat-dialog-actions>
 	<button mat-button [mat-dialog-close]>Cancel</button>
-	<button mat-flat-button color="primary" (click)="upload()" [disabled]="title.length === 0">Upload</button>
+	<button mat-flat-button color="primary" (click)="upload()" [disabled]="!title || uploadService.uploading">
+		<span *ngIf="!uploadService.uploading">Upload</span>
+		<mat-spinner *ngIf="uploadService.uploading" color="primary" diameter="20"></mat-spinner>
+	</button>
 </mat-dialog-actions>

@@ -9,6 +9,7 @@ import { UploadService } from '../../services/upload/upload.service';
 import { UserVideo } from '../../types/user-video';
 import { of } from 'rxjs';
 import { sizes } from '../../enums/size.enum';
+import { FormsModule } from '@angular/forms';
 
 describe('UploadDialogComponent', () => {
 	let component: UploadDialogComponent;
@@ -19,7 +20,13 @@ describe('UploadDialogComponent', () => {
 	beforeEach(async () => {
 		dialogRefMock = jasmine.createSpyObj(['close']);
 		await TestBed.configureTestingModule({
-			imports: [HttpClientTestingModule, MatDialogModule, MatIconModule, MatSnackBarModule],
+			imports: [
+				HttpClientTestingModule,
+				MatDialogModule,
+				MatIconModule,
+				MatSnackBarModule,
+				FormsModule
+			],
 			declarations: [UploadDialogComponent],
 			providers: [{ provide: MatDialogRef, useValue: dialogRefMock }]
 		}).compileComponents();

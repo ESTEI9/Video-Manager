@@ -1,0 +1,10 @@
+@import '/src/assets/controls';
+
+mat-card {
+    width: 400px;
+    margin: 20px auto 0 auto;
+
+    mat-card-actions {
+        justify-content: space-between;
+    }
+}

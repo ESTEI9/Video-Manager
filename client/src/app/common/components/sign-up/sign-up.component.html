@@ -1,0 +1,33 @@
+<mat-card>
+    <mat-card-header>
+        <mat-card-title>Sign Up</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+        <form [formGroup]="formGroup">
+            <div class="control">
+                <label for="name">Name</label>
+                <input type="text" formControlName="name">
+            </div>
+            <div class="control">
+                <label for="email">Email</label>
+                <input type="text" formControlName="email">
+            </div>
+            <div class="control">
+                <label for="password">Password</label>
+                <input type="password" formControlName="password">
+            </div>
+            <div class="control">
+                <label for="passwordMatch">Verify Password</label>
+                <input type="password" formControlName="passwordMatch">
+            </div>
+            <span class="verified" *ngIf="formGroup.get('password')?.value && passwordsMatch">Passwords Match</span>
+        </form>
+    </mat-card-content>
+    <mat-card-actions>
+        <button mat-flat-button color="primary" [disabled]="!formGroup.valid || !passwordsMatch || signingUp" (click)="signUp()">
+            <span *ngIf="!signingUp">Sign Up</span>
+            <mat-spinner *ngIf="signingUp" color="primary" diameter="20"></mat-spinner>
+        </button>
+        <button mat-flat-button (click)="cancel()">Cancel</button>
+    </mat-card-actions>
+</mat-card>

@@ -1,0 +1,16 @@
+<mat-card>
+    <mat-card-header>
+        <mat-card-title>Share Video</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+        <div class="control">
+            <label>Users</label>
+            <span class="label-description">Share email addresses, separated by comma (,)</span>
+            <input type="text" [(ngModel)]="shared">
+        </div>
+    </mat-card-content>
+    <mat-dialog-actions>
+        <button mat-flat-button color="primary" (click)="save()">Share</button>
+        <button mat-flat-button (click)="cancel()">Cancel</button>
+    </mat-dialog-actions>
+</mat-card>

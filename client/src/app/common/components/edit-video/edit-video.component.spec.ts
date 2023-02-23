@@ -1,5 +1,6 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -15,7 +16,13 @@ describe('EditVideoComponent', () => {
   beforeEach(async () => {
     dialogRefMock = jasmine.createSpyObj(['close']);
     await TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, MatDialogModule, MatIconModule, MatSnackBarModule],
+      imports: [
+        HttpClientTestingModule,
+        MatDialogModule,
+        MatIconModule,
+        MatSnackBarModule,
+        FormsModule
+      ],
       declarations: [ EditVideoComponent ],
       providers: [
         { provide: MatDialogRef, useValue: dialogRefMock },

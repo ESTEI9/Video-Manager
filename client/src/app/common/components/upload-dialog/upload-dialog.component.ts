@@ -4,6 +4,8 @@ import { sizes } from '../../enums/size.enum';
 import { UploadService } from '../../services/upload/upload.service';
 import { UserVideo } from '../../types/user-video';
 import { MetaData } from '../../types/metadata';
+import { UserService } from '../../services/user/user.service';
+import { tap } from 'rxjs';
 
 @Component({
 	selector: 'app-upload-dialog',
@@ -13,14 +15,15 @@ import { MetaData } from '../../types/metadata';
 export class UploadDialogComponent implements OnInit {
 	@ViewChild('fileInput') fileInput!: ElementRef;
 	file: File | null = null;
-	title: string = '';
-	description: string = '';
-	tags: string = '';
+	title: string;
+	description: string;
+	tags: string;
 	fileTooBig: boolean = false;
 
 	constructor(
-		private uploadService: UploadService,
-		private dialogRef: MatDialogRef<UploadDialogComponent>
+		public uploadService: UploadService,
+		public userService: UserService,
+		public dialogRef: MatDialogRef<UploadDialogComponent>
 	) {}
 
 	ngOnInit(): void {}
@@ -41,11 +44,20 @@ export class UploadDialogComponent implements OnInit {
 
 	upload() {
 		if (this.title.length > 0) {
-			const metadata: MetaData = { title: this.title, description: this.description, tags: this.tags.replace(/(?<=,)\s/g,'')};
-			if(this.file instanceof File)
-			this.uploadService.upload(this.file!, metadata).subscribe((result: UserVideo) => {
-				this.dialogRef.close(result);
-			});
+			const metadata: MetaData = {
+				author: this.userService.user.id,
+				title: this.title,
+				description: this.description,
+				tags: this.tags?.replace(/(?<=,)\s/g,'').split(',')
+			};
+			if(this.file instanceof File) {
+				this.uploadService.uploading = true;
+				this.uploadService.upload(this.file!, metadata).pipe(
+					tap(() => { this.uploadService.uploading = false })
+				).subscribe((result: UserVideo) => {
+					this.dialogRef.close(result);
+				});
+			}
 		}
 	}
 }
