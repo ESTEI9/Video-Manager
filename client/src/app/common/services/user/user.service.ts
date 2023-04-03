@@ -1,4 +1,4 @@
-import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams, HttpRequest, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs';
@@ -34,13 +34,13 @@ export class UserService {
     return this.http.post<User | HttpErrorResponse>(`${environment.apiBaseUrl}/createUser`, body.toString(), { headers });
   }
 
-  login(data: {email: string, password: string}): Observable<User | HttpErrorResponse> {
+  login(data: {email: string, password: string}): Observable<User | HttpResponse<HttpErrorResponse>> {
     const body = new HttpParams()
       .set('email', data.email)
       .set('password', data.password);
     const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded').set('Accept', 'application/json');
     
-    return this.http.post<User | any>(`${environment.apiBaseUrl}/login`, body.toString(), { headers });
+    return this.http.post<User | HttpResponse<HttpErrorResponse>>(`${environment.apiBaseUrl}/login`, body.toString(), { headers });
   }
 
   setUser(user: User) {
@@ -59,6 +59,7 @@ export class UserService {
 
   logout() {
     this.store.reset(UserState);
+    window.localStorage.clear();
     this.router.navigateByUrl('');
   }
 }

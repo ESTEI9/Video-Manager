@@ -1,0 +1,5 @@
+<h2>Shared Videos</h2>
+<section class="video-container">
+    <app-video *ngFor="let shared of videos" [video]="shared"></app-video>
+</section>
+<span *ngIf="!videos?.length"><em>Uh oh! No one has shared any videos with you! :-(</em></span>

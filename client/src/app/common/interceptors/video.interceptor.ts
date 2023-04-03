@@ -7,10 +7,14 @@ import { HttpErrors } from "../types/http.errors";
 @Injectable()
 export class VideoInterceptor implements HttpInterceptor {
 
+    exceptions: string[] = ['/api/login', '/api/createUser'];
+
     constructor(public userService: UserService) {}
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        if(this.userService.isValidSession() || req.url.includes('/api/login')) return next.handle(req);
+
+        if(this.exceptions.includes(req.url)) return next.handle(req);
+        if(this.userService.isValidSession()) return next.handle(req);
 
         this.userService.logout();
         return of(HttpErrors.SessionError(req));

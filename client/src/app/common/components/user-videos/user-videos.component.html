@@ -1,0 +1,5 @@
+<h2>Your Videos</h2>
+<section class="video-container">
+    <app-video *ngFor="let video of videos" [video]="video" (delete)="deleteVideo(video)"></app-video>
+</section>
+<span *ngIf="!videos?.length"><em>Hi! Upload some videos to get this party started!</em></span>

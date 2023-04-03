@@ -22,6 +22,8 @@ import { UserState } from './common/states/user.state';
 import { NgxsStoragePluginModule } from '@ngxs/storage-plugin';
 import { NgxsSelectSnapshotModule } from '@ngxs-labs/select-snapshot';
 import { VideoInterceptor } from './common/interceptors/video.interceptor';
+import { SharedVideosComponent } from './common/components/shared-videos/shared-videos.component';
+import { UserVideosComponent } from './common/components/user-videos/user-videos.component';
 
 @NgModule({
 	declarations: [
@@ -32,7 +34,9 @@ import { VideoInterceptor } from './common/interceptors/video.interceptor';
 		LoginComponent,
 		SignUpComponent,
 		VideoComponent,
-		ShareVideoComponent
+		ShareVideoComponent,
+		SharedVideosComponent,
+		UserVideosComponent
 	],
 	imports: [
 		BrowserModule,

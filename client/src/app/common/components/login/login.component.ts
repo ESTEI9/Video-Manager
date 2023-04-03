@@ -1,4 +1,4 @@
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
 import { UserService } from '../../services/user/user.service';
 import { User } from '../../types/user';
 import { SignUpComponent } from '../sign-up/sign-up.component';
-import { tap, filter, take } from 'rxjs';
+import { tap, filter, shareReplay } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -48,14 +48,15 @@ export class LoginComponent {
     };
     this.loggingIn = true;
     this.userService.login(data).pipe(
-      take(1),
-      tap((res: User | HttpErrorResponse) => {
-        if((res as HttpErrorResponse).message) {
-          this.snackBar.open((res as HttpErrorResponse).message, undefined, { duration: 4000 });
+      shareReplay(),
+      tap((res: (User | HttpResponse<HttpErrorResponse>)) => {
+        const error = (res as HttpResponse<HttpErrorResponse>).body; 
+        if(error) {
+          this.snackBar.open(error.message, undefined, { duration: 4000 });
           return;
         }
       }),
-      filter((res: User | HttpErrorResponse): res is User => !!(res as User)),
+      filter((res: User | HttpResponse<HttpErrorResponse>): res is User => !!(res as User)),
       tap((user: User) => {
         this.setUser(user);
         this.navigateUser(user);

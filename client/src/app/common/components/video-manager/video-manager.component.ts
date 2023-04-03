@@ -56,14 +56,7 @@ export class VideoManagerComponent implements OnInit {
 	}
 
 	getSharedVideos() {
-		return this.upload.getSharedVideos(this.userService.user.email).pipe(
-			mergeMap((existingVideos: UserVideo[]) => {
-				return this.upload$.pipe(
-					scan((videos, newShared) => videos.concat(newShared), existingVideos),
-					startWith(existingVideos)
-				);
-			})
-		);
+		return this.upload.getSharedVideos(this.userService.user.email);
 	}
 
 	openUpload() {
@@ -73,15 +66,15 @@ export class VideoManagerComponent implements OnInit {
 		dialogRef
 			.afterClosed()
 			.pipe(
-				tap((result: UserVideo | undefined) => {
-					if (typeof result !== 'undefined')
-						this.snackbar.open('Video uploaded successfully', undefined, {
-							duration: 4000
-						});
+				filter((result: UserVideo | undefined): result is UserVideo => result != null),
+				tap((result: UserVideo) => {
+					if (typeof result !== 'undefined') {
+						this.snackbar.open('Video uploaded successfully', undefined, { duration: 4000 });
+						this.upload$.next(result)
+					}
 				}),
-				filter((result: UserVideo | undefined): result is UserVideo => result != null)
-			)
-			.subscribe((result: UserVideo) => { if (typeof result !== 'undefined') this.upload$.next(result) });
+				
+			).subscribe()
 	}
 
 	deleteVideo(video: UserVideo) {

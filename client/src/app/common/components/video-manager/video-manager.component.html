@@ -11,15 +11,7 @@
 <main class="videos">
 	<mat-spinner color="primary" *ngIf="upload.loadingVideos"></mat-spinner>
 	<ng-container *ngIf="videos$ | async as videos">
-		<h2>Your Videos</h2>
-		<section class="video-container">
-			<app-video *ngFor="let video of videos.videos" [video]="video" (delete)="deleteVideo(video)"></app-video>
-		</section>
-		<span *ngIf="!videos.videos?.length"><em>Hi! Upload some videos to get this party started!</em></span>
-		<h2>Shared Videos</h2>
-		<section class="video-container">
-			<app-video *ngFor="let shared of videos.shared" [video]="shared"></app-video>
-		</section>
-		<span *ngIf="!videos.shared?.length"><em>Uh oh! No one has shared any videos with you! :-(</em></span>
+		<app-user-videos [videos]="videos.videos" (delete)="deleteVideo($event)"></app-user-videos>
+		<app-shared-videos [videos]="videos.shared"></app-shared-videos>
 	</ng-container>
 </main>
