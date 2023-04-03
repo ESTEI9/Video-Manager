@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
 import { UserService } from '../../services/user/user.service';
 import { User } from '../../types/user';
 import { SignUpComponent } from '../sign-up/sign-up.component';
-import { tap, filter, shareReplay } from 'rxjs';
+import { tap, filter, take } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -48,7 +48,7 @@ export class LoginComponent {
     };
     this.loggingIn = true;
     this.userService.login(data).pipe(
-      shareReplay(),
+      take(1),
       tap(() => { this.loggingIn = false; }),
       tap((res: User | HttpErrorResponse) => {
         if((res as HttpErrorResponse).message) {

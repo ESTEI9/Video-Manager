@@ -23,3 +23,4 @@ Route::post('edit', [VideoController::class, 'editVideo']);
 Route::post('share', [VideoController::class, 'shareVideo']);
 Route::post('login', [UserController::class, 'loginUser']);
 Route::post('createUser', [UserController::class, 'createUser']);
+Route::delete('delete/{videoId}', [VideoController::class, 'deleteVideo']);

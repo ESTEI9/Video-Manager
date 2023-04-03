@@ -1,20 +1,20 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { filter, map, mergeMap, Observable, of, scan, shareReplay, startWith, Subject, switchMap, tap, take } from 'rxjs';
+import { filter, mergeMap, Observable, of, scan, shareReplay, startWith, Subject, switchMap, tap, take, combineLatest, map } from 'rxjs';
 import { UploadService } from '../../services/upload/upload.service';
 import { UserService } from '../../services/user/user.service';
 import { UserVideo } from '../../types/user-video';
-import { EditVideoComponent } from '../edit-video/edit-video.component';
 import { UploadDialogComponent } from '../upload-dialog/upload-dialog.component';
 
 @Component({
-  selector: 'app-video-manager',
-  templateUrl: './video-manager.component.html',
-  styleUrls: ['./video-manager.component.scss']
+	selector: 'app-video-manager',
+	templateUrl: './video-manager.component.html',
+	styleUrls: ['./video-manager.component.scss']
 })
 export class VideoManagerComponent implements OnInit {
-	videos$: Observable<UserVideo[]> = of([]);
+	videos$: Observable<{videos: UserVideo[], shared: UserVideo[]}> = of({videos: [], shared: []});
+	myVideos$: Observable<UserVideo[]> = of([]);
 	upload$: Subject<UserVideo> = new Subject<UserVideo>();
 	shared$: Observable<UserVideo[]> = of([]);
 
@@ -22,20 +22,28 @@ export class VideoManagerComponent implements OnInit {
 		public dialog: MatDialog,
 		public snackbar: MatSnackBar,
 		public upload: UploadService,
-    	public userService: UserService
-	) {}
+		public userService: UserService
+	) { }
 
 	ngOnInit(): void {
-		this.refreshVideos();
-    	this.getSharedVideos();
+		this.getVideos();
 	}
 
-	refreshVideos() {
+	getVideos() {
 		this.upload.loadingVideos = true;
-		this.videos$ = this.upload.getVideos(this.userService.user.id).pipe(
-			// Transforms the cold observable to a hot observable, meaning we only do the network request once
+		this.myVideos$ = this.getMyVideos();
+		this.shared$ = this.getSharedVideos();
+		this.videos$ = combineLatest([
+			this.myVideos$,
+			this.shared$
+		]).pipe(
 			shareReplay(),
+			map(([videos, shared]) => ({ videos, shared })), 
+			tap(() => this.upload.loadingVideos = false))
+	}
 
+	getMyVideos() {
+		return this.upload.getVideos(this.userService.user.id).pipe(
 			// Merge that result with any new videos that the user uploads
 			mergeMap((existingVideos: UserVideo[]) => {
 				return this.upload$.pipe(
@@ -43,22 +51,20 @@ export class VideoManagerComponent implements OnInit {
 					scan((videos, newUpload) => videos.concat(newUpload), existingVideos),
 					startWith(existingVideos)
 				);
-			}),
-			tap(() => {
-				this.upload.loadingVideos = false;
 			})
 		);
 	}
 
-  getSharedVideos() {
-	this.upload.loadingShared = true;
-    this.shared$ = this.upload.getSharedVideos(this.userService.user.email).pipe(
-      shareReplay(),
-	  tap(() => {
-		this.upload.loadingShared = false;
-	  })
-    );
-  }
+	getSharedVideos() {
+		return this.upload.getSharedVideos(this.userService.user.email).pipe(
+			mergeMap((existingVideos: UserVideo[]) => {
+				return this.upload$.pipe(
+					scan((videos, newShared) => videos.concat(newShared), existingVideos),
+					startWith(existingVideos)
+				);
+			})
+		);
+	}
 
 	openUpload() {
 		const dialogRef = this.dialog.open<UploadDialogComponent, any, UserVideo>(
@@ -68,17 +74,26 @@ export class VideoManagerComponent implements OnInit {
 			.afterClosed()
 			.pipe(
 				tap((result: UserVideo | undefined) => {
-					if(typeof result !== 'undefined')
-					this.snackbar.open('Video uploaded successfully', undefined, {
-						duration: 4000
-					});
+					if (typeof result !== 'undefined')
+						this.snackbar.open('Video uploaded successfully', undefined, {
+							duration: 4000
+						});
 				}),
 				filter((result: UserVideo | undefined): result is UserVideo => result != null)
 			)
-			.subscribe((result: UserVideo) => { if(typeof result !== 'undefined') this.upload$.next(result) });
+			.subscribe((result: UserVideo) => { if (typeof result !== 'undefined') this.upload$.next(result) });
 	}
 
-  logout() {
-    this.userService.logout();
-  }
+	deleteVideo(video: UserVideo) {
+		this.upload.delete(video).pipe(
+			take(1),
+			switchMap(() => this.myVideos$),
+			tap((videos: UserVideo[]) => this.myVideos$ = of(videos.filter(v => video.id !== v.id))),
+			tap(() => this.snackbar.open('Deleted Video', undefined, { duration: 4000 }))
+		).subscribe()
+	}
+
+	logout() {
+		this.userService.logout();
+	}
 }

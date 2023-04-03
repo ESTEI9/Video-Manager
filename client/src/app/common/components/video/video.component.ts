@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { switchMap, Observable, of, tap } from 'rxjs';
@@ -16,6 +16,7 @@ import { ShareVideoComponent } from '../share-video/share-video.component';
 export class VideoComponent implements OnInit {
 
   @Input() video!: UserVideo;
+  @Output() delete = new EventEmitter<any>();
   canEdit: boolean = false;
   loading: boolean = false;
 
@@ -31,11 +32,11 @@ export class VideoComponent implements OnInit {
   }
 
   isVideoEditable():boolean {
-    return this.video.author === this.userService.user.id;
+    return this.video.author == this.userService.user.id;
   }
 
-  editVideo(video: UserVideo) {
-		const dialogRef = this.dialog.open<EditVideoComponent, UserVideo, UserVideo>(EditVideoComponent, {data: video });
+  editVideo() {
+		const dialogRef = this.dialog.open<EditVideoComponent, UserVideo, UserVideo>(EditVideoComponent, {data: this.video });
 		dialogRef.afterClosed().pipe(
       tap(() => { this.loading = true; }),
 			switchMap((video: UserVideo | undefined): Observable<UserVideo> => {
@@ -50,8 +51,8 @@ export class VideoComponent implements OnInit {
 		).subscribe();
 	}
 
-  shareVideo(video: UserVideo) {
-    const dialogRef = this.dialog.open<ShareVideoComponent, UserVideo, UserVideo>(ShareVideoComponent, { data: video });
+  shareVideo() {
+    const dialogRef = this.dialog.open<ShareVideoComponent, UserVideo, UserVideo>(ShareVideoComponent, { data: this.video });
     dialogRef.afterClosed().pipe(
       tap(() => { this.loading = true; }),
 			switchMap((video: UserVideo | undefined): Observable<UserVideo> => {
@@ -62,5 +63,10 @@ export class VideoComponent implements OnInit {
         this.snackbar.open('Shared Video', undefined, { duration: 4000});
       })
 		).subscribe();
+  }
+
+  deleteVideo() {
+    this.loading = true;
+    this.delete.emit();
   }
 }

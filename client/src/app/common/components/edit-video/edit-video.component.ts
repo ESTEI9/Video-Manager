@@ -21,11 +21,13 @@ export class EditVideoComponent {
     this.video = data;
     this.title = this.video.title;
     this.description = this.video.description!;
-    this.tags = this.video.tags?.join(', ')!;
+    this.tags = this.video.tags!.join(', ');
   }
 
   save() {
-    const video = { ...this.video, title: this.title, description: this.description, tags: this.tags?.replace(/(?<=,)\s/g,'').split(',') };
+    const tags = this.tags?.replace(/(?<=,)\s/g,'').split(',');
+    let video = { ...this.video, title: this.title, description: this.description };
+    if (tags.length) video = {...video, tags};
     this.dialogRef.close(video);
   }
 }

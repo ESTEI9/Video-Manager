@@ -9,16 +9,17 @@
 	</button>
 </mat-toolbar>
 <main class="videos">
-	<h2>Your Videos</h2>
 	<mat-spinner color="primary" *ngIf="upload.loadingVideos"></mat-spinner>
-	<section class="video-container">
-		<app-video *ngFor="let video of videos$ | async" [video]="video"></app-video>
-	</section>
-	<span *ngIf="!(videos$ | async)?.length && !upload.loadingVideos"><em>Hi! Upload some videos to get this party started!</em></span>
-    <h2>Shared Videos</h2>
-	<mat-spinner *ngIf="upload.loadingShared" color="primary"></mat-spinner>
-    <section class="video-container">
-        <app-video *ngFor="let video of shared$ | async" [video]="video"></app-video>
-    </section>
-	<span *ngIf="!(shared$ | async)?.length && !upload.loadingShared"><em>Uh oh! No one has shared any videos with you! :-(</em></span>
+	<ng-container *ngIf="videos$ | async as videos">
+		<h2>Your Videos</h2>
+		<section class="video-container">
+			<app-video *ngFor="let video of videos.videos" [video]="video" (delete)="deleteVideo(video)"></app-video>
+		</section>
+		<span *ngIf="!videos.videos?.length"><em>Hi! Upload some videos to get this party started!</em></span>
+		<h2>Shared Videos</h2>
+		<section class="video-container">
+			<app-video *ngFor="let shared of videos.shared" [video]="shared"></app-video>
+		</section>
+		<span *ngIf="!videos.shared?.length"><em>Uh oh! No one has shared any videos with you! :-(</em></span>
+	</ng-container>
 </main>

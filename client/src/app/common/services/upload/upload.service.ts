@@ -45,7 +45,7 @@ export class UploadService {
 		formData.append('id', video.id.toString());
 		formData.append('title', video.title);
 		if(video.description) formData.append('description', video.description);
-		if(video.tags) formData.append('tags', JSON.stringify(video.tags));
+		if(video.tags!?.length !== 1 && video.tags![0] !== "") formData.append('tags', JSON.stringify(video.tags));
 		const headers = new HttpHeaders().set('Accept', 'application/json');
 
 		return this.http.post<UserVideo>(`${environment.apiBaseUrl}/edit`, formData, { headers });
@@ -58,5 +58,12 @@ export class UploadService {
 		const headers = new HttpHeaders().set('Accept', 'application/json');
 
 		return this.http.post<UserVideo>(`${environment.apiBaseUrl}/share`, formData, { headers });
+	}
+
+	delete(video: UserVideo): Observable<any> {
+		const videoId = video.id.toString()
+		const headers = new HttpHeaders().set('Accept', 'application/json');
+
+		return this.http.delete(`${environment.apiBaseUrl}/delete/${videoId}`, { headers });
 	}
 }

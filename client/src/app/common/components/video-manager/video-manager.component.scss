@@ -15,7 +15,8 @@ h2 {
     flex-wrap: wrap;
 
     app-video {
-        width: fit-content;
+        width: 100%;
+        max-width: 300px;
         display: block;
         margin: 10px;
     }

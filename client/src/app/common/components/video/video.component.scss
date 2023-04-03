@@ -11,7 +11,7 @@
 }
 
 .video-player {
-	width: 300px;
+	width: 100%;
 	height: auto;
 }
 
@@ -24,6 +24,7 @@ mat-card-header {
 	display: flex;
 	list-style: none;
 	padding-left: 0;
+	min-height: 32px;
 
 	li {
 		padding: 4px;
@@ -37,4 +38,20 @@ mat-card-header {
 			margin-left: 0;
 		}
 	}
+}
+
+.description {
+	height: 40px;
+    overflow-y: auto;
+}
+
+.loading {
+	pointer-events: none;
+	filter: grayscale(1);
+}
+
+mat-spinner {
+	position: absolute;
+	z-index: 1;
+	transform: translate(100%, 100%);
 }

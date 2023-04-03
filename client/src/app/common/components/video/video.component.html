@@ -1,13 +1,17 @@
-<mat-card *ngIf="video" [class.loading]="true">
+<mat-spinner color="primary" *ngIf="loading"></mat-spinner>
+<mat-card *ngIf="video" [class.loading]="loading">
     <mat-card-header>
         <mat-card-title>{{video.title}}</mat-card-title>
         <button mat-icon-button [matMenuTriggerFor]="options"><mat-icon>more_vert</mat-icon></button>
         <mat-menu #options="matMenu">
-            <button mat-menu-item matTooltip="Edit video" (click)="editVideo(video)" *ngIf="canEdit">
+            <button mat-menu-item matTooltip="Edit video" (click)="editVideo()" *ngIf="canEdit">
                 <mat-icon>edit</mat-icon> Edit
             </button>
-            <button mat-menu-item matTooltip="Share Video" (click)="shareVideo(video)">
+            <button mat-menu-item matTooltip="Share Video" (click)="shareVideo()">
                 <mat-icon>share</mat-icon> Share
+            </button>
+            <button mat-menu-item matTooltip="Delete Video" (click)="deleteVideo()">
+                <mat-icon>delete</mat-icon> Delete
             </button>
         </mat-menu>
     </mat-card-header>

@@ -79,4 +79,10 @@ class VideoController extends Controller
 
 		return VideoResource::make($video);
 	}
+	
+	public function deleteVideo (int $video_id)
+	{
+		Video::destroy($video_id);
+		return;
+	}
 }
