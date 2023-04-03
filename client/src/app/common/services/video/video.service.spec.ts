@@ -2,20 +2,20 @@ import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 
 import { environment } from '../../../../environments/environment';
-import { UploadService } from './upload.service';
+import { VideoService } from './video.service';
 import { MetaData } from '../../types/metadata';
 import { UserVideo } from '../../types/user-video';
 
-describe('UploadService', () => {
+describe('VideoService', () => {
 	let http: HttpTestingController;
-	let service: UploadService;
+	let service: VideoService;
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
 			imports: [HttpClientTestingModule]
 		});
 
-		service = TestBed.inject(UploadService);
+		service = TestBed.inject(VideoService);
 		http = TestBed.inject(HttpTestingController);
 	});
 

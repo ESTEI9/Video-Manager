@@ -1,7 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { sizes } from '../../enums/size.enum';
-import { UploadService } from '../../services/upload/upload.service';
+import { VideoService } from '../../services/video/video.service';
 import { UserVideo } from '../../types/user-video';
 import { MetaData } from '../../types/metadata';
 import { UserService } from '../../services/user/user.service';
@@ -21,7 +21,7 @@ export class UploadDialogComponent implements OnInit {
 	fileTooBig: boolean = false;
 
 	constructor(
-		public uploadService: UploadService,
+		public VideoService: VideoService,
 		public userService: UserService,
 		public dialogRef: MatDialogRef<UploadDialogComponent>
 	) {}
@@ -51,9 +51,9 @@ export class UploadDialogComponent implements OnInit {
 				tags: this.tags?.replace(/(?<=,)\s/g,'').split(',')
 			};
 			if(this.file instanceof File) {
-				this.uploadService.uploading = true;
-				this.uploadService.upload(this.file!, metadata).pipe(
-					tap(() => { this.uploadService.uploading = false })
+				this.VideoService.uploading = true;
+				this.VideoService.upload(this.file!, metadata).pipe(
+					tap(() => { this.VideoService.uploading = false })
 				).subscribe((result: UserVideo) => {
 					this.dialogRef.close(result);
 				});

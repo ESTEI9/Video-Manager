@@ -6,9 +6,9 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { of } from 'rxjs';
-import { MockUploadService } from '../../mocks/upload.service.mock';
+import { MockVideoService } from '../../mocks/video.service.mock';
 import { MockUserService } from '../../mocks/user.service.mock';
-import { UploadService } from '../../services/upload/upload.service';
+import { VideoService } from '../../services/video/video.service';
 import { UserService } from '../../services/user/user.service';
 import { UserVideo } from '../../types/user-video';
 import { EditVideoComponent } from '../edit-video/edit-video.component';
@@ -31,7 +31,7 @@ describe('VideoComponent', () => {
         BrowserAnimationsModule
       ],
       providers: [
-        { provide: UploadService, useClass: MockUploadService },
+        { provide: VideoService, useClass: MockVideoService },
         { provide: UserService, useClass: MockUserService }
       ]
     })
@@ -53,7 +53,7 @@ describe('VideoComponent', () => {
   describe('edit video', () => {
     it('should call the correct endpoint to edit a video', () => {
       const fakeVideo = { id: 1, path: 'bogus/path', title: 'Bogus' } as UserVideo;
-      const editSpy = spyOn(component.uploadService, 'edit').and.returnValue(of(fakeVideo));
+      const editSpy = spyOn(component.VideoService, 'edit').and.returnValue(of(fakeVideo));
       component.dialog.open = jasmine.createSpy().and.returnValue({
         afterClosed: () => of(fakeVideo)
       } as MatDialogRef<EditVideoComponent>);
@@ -67,7 +67,7 @@ describe('VideoComponent', () => {
   describe('share video', () => {
     it('should call the correct endpoint to share a video', () => {
       const fakeVideo = { id: 1, path: 'bogus/path', title: 'Bogus', shared: ["bogus@email.com"] } as UserVideo;
-      const shareSpy = spyOn(component.uploadService, 'share').and.returnValue(of(fakeVideo));
+      const shareSpy = spyOn(component.VideoService, 'share').and.returnValue(of(fakeVideo));
       component.dialog.open = jasmine.createSpy().and.returnValue({
         afterClosed: () => of(fakeVideo)
       } as MatDialogRef<EditVideoComponent>);

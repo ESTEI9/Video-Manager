@@ -5,7 +5,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { UploadDialogComponent } from './upload-dialog.component';
 import { MatIconModule } from '@angular/material/icon';
-import { UploadService } from '../../services/upload/upload.service';
+import { VideoService } from '../../services/video/video.service';
 import { UserVideo } from '../../types/user-video';
 import { of } from 'rxjs';
 import { sizes } from '../../enums/size.enum';
@@ -14,7 +14,7 @@ import { FormsModule } from '@angular/forms';
 describe('UploadDialogComponent', () => {
 	let component: UploadDialogComponent;
 	let fixture: ComponentFixture<UploadDialogComponent>;
-	let uploadService: UploadService;
+	let VideoService: VideoService;
 	let dialogRefMock!: jasmine.SpyObj<MatDialogRef<UploadDialogComponent, any>>;
 
 	beforeEach(async () => {
@@ -31,7 +31,7 @@ describe('UploadDialogComponent', () => {
 			providers: [{ provide: MatDialogRef, useValue: dialogRefMock }]
 		}).compileComponents();
 
-		uploadService = TestBed.inject(UploadService);
+		VideoService = TestBed.inject(VideoService);
 	});
 
 	beforeEach(() => {
@@ -69,28 +69,28 @@ describe('UploadDialogComponent', () => {
 		it('should call the upload.service upload method, close the dialog when finished, if a file was chosen', () => {
 			component.title = 'Bogus';
 			component.file = new File([''], 'bogusFile', { type: 'text/html' });
-			spyOn(uploadService, 'upload').and.returnValue(
+			spyOn(VideoService, 'upload').and.returnValue(
 				of({ id: 1, path: 'bogus/path', title: 'Bogus' } as UserVideo)
 			);
 			fixture.detectChanges();
 
 			component.upload();
 
-			expect(uploadService.upload).toHaveBeenCalled();
+			expect(VideoService.upload).toHaveBeenCalled();
 			expect(dialogRefMock.close).toHaveBeenCalled();
 		});
 
 		it('should do nothing when calling the upload.service upload method if no file was chosen', () => {
 			component.title = 'Bogus';
 			component.file = null;
-			spyOn(uploadService, 'upload').and.returnValue(
+			spyOn(VideoService, 'upload').and.returnValue(
 				of({ id: 1, path: 'bogus/path', title: 'Bogus' } as UserVideo)
 			);
 			fixture.detectChanges();
 
 			component.upload();
 
-			expect(uploadService.upload).not.toHaveBeenCalled();
+			expect(VideoService.upload).not.toHaveBeenCalled();
 			expect(dialogRefMock.close).not.toHaveBeenCalled();
 		});
 	});

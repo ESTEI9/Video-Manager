@@ -7,8 +7,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { of } from 'rxjs';
-import { MockUploadService } from '../../mocks/upload.service.mock';
-import { UploadService } from '../../services/upload/upload.service';
+import { MockVideoService } from '../../mocks/video.service.mock';
+import { VideoService } from '../../services/video/video.service';
 import { UserVideo } from '../../types/user-video';
 
 import { VideoManagerComponent } from './video-manager.component';
@@ -36,7 +36,7 @@ describe('VideoManagerComponent', () => {
       providers: [
         { provide: MatDialog, useValue: dialogMock },
 				{ provide: MatSnackBar, useValue: snackbarMock },
-        { provide: UploadService, useClass: MockUploadService }
+        { provide: VideoService, useClass: MockVideoService }
       ]
       
     })

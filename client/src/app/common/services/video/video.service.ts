@@ -8,11 +8,10 @@ import { UserVideo } from '../../types/user-video';
 @Injectable({
 	providedIn: 'root'
 })
-export class UploadService {
+export class VideoService {
 
 	uploading: boolean = false;
 	loadingVideos: boolean = false;
-	loadingShared: boolean = false;
 
 	constructor(private http: HttpClient) {}
 

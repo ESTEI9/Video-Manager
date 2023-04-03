@@ -24,8 +24,8 @@
 </mat-dialog-content>
 <mat-dialog-actions>
 	<button mat-button [mat-dialog-close]>Cancel</button>
-	<button mat-flat-button color="primary" (click)="upload()" [disabled]="!title || uploadService.uploading">
-		<span *ngIf="!uploadService.uploading">Upload</span>
-		<mat-spinner *ngIf="uploadService.uploading" color="primary" diameter="20"></mat-spinner>
+	<button mat-flat-button color="primary" (click)="upload()" [disabled]="!title || VideoService.uploading">
+		<span *ngIf="!VideoService.uploading">Upload</span>
+		<mat-spinner *ngIf="VideoService.uploading" color="primary" diameter="20"></mat-spinner>
 	</button>
 </mat-dialog-actions>

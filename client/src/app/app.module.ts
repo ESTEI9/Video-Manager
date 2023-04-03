@@ -9,7 +9,7 @@ import { UploadDialogComponent } from './common/components/upload-dialog/upload-
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { EditVideoComponent } from './common/components/edit-video/edit-video.component';
 import { LoginComponent } from './common/components/login/login.component';
 import { VideoManagerComponent } from './common/components/video-manager/video-manager.component';
@@ -17,6 +17,11 @@ import { SignUpComponent } from './common/components/sign-up/sign-up.component';
 import { VideoComponent } from './common/components/video/video.component';
 import { ShareVideoComponent } from './common/components/share-video/share-video.component';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { NgxsModule } from '@ngxs/store';
+import { UserState } from './common/states/user.state';
+import { NgxsStoragePluginModule } from '@ngxs/storage-plugin';
+import { NgxsSelectSnapshotModule } from '@ngxs-labs/select-snapshot';
+import { VideoInterceptor } from './common/interceptors/video.interceptor';
 
 @NgModule({
 	declarations: [
@@ -39,9 +44,14 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 		AppMaterialModule,
 		BrowserAnimationsModule,
 		MatSnackBarModule,
-		MatProgressSpinnerModule
+		MatProgressSpinnerModule,
+		NgxsModule.forRoot([UserState]),
+		NgxsStoragePluginModule.forRoot({ key: [UserState]}),
+		NgxsSelectSnapshotModule.forRoot()
 	],
-	providers: [],
+	providers: [
+		{ provide: HTTP_INTERCEPTORS, useClass: VideoInterceptor, multi: true }
+	],
 	bootstrap: [AppComponent]
 })
 export class AppModule {}

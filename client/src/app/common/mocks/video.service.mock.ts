@@ -1,6 +1,6 @@
 import { of } from 'rxjs';
 
-export class MockUploadService {
+export class MockVideoService {
     constructor() {}
 
     getVideos = () => of();

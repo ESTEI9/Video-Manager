@@ -9,8 +9,6 @@ const routes: Routes = [
 	{ path: 'videos', component: VideoManagerComponent, canActivate: [ManagerGuard] }
 ];
 
-
-
 @NgModule({
 	imports: [RouterModule.forRoot(routes)],
 	exports: [RouterModule],

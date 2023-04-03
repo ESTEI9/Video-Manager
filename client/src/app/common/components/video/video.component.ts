@@ -2,7 +2,7 @@ import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { switchMap, Observable, of, tap } from 'rxjs';
-import { UploadService } from '../../services/upload/upload.service';
+import { VideoService } from '../../services/video/video.service';
 import { UserService } from '../../services/user/user.service';
 import { UserVideo } from '../../types/user-video';
 import { EditVideoComponent } from '../edit-video/edit-video.component';
@@ -23,7 +23,7 @@ export class VideoComponent implements OnInit {
   constructor(
     public dialog: MatDialog,
     public snackbar: MatSnackBar,
-    public uploadService: UploadService,
+    public VideoService: VideoService,
     public userService: UserService,
   ) {}
 
@@ -41,7 +41,7 @@ export class VideoComponent implements OnInit {
       tap(() => { this.loading = true; }),
 			switchMap((video: UserVideo | undefined): Observable<UserVideo> => {
 				if(typeof video === 'undefined') return of();
-				return this.uploadService.edit(video as UserVideo);
+				return this.VideoService.edit(video as UserVideo);
 			}),
       tap((video: UserVideo) => {
         this.loading = false;
@@ -56,7 +56,7 @@ export class VideoComponent implements OnInit {
     dialogRef.afterClosed().pipe(
       tap(() => { this.loading = true; }),
 			switchMap((video: UserVideo | undefined): Observable<UserVideo> => {
-				return this.uploadService.share(video as UserVideo);
+				return this.VideoService.share(video as UserVideo);
 			}),
       tap(() => {
         this.loading = false;

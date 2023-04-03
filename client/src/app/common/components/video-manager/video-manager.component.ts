@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { filter, mergeMap, Observable, of, scan, shareReplay, startWith, Subject, switchMap, tap, take, combineLatest, map } from 'rxjs';
-import { UploadService } from '../../services/upload/upload.service';
+import { VideoService } from '../../services/video/video.service';
 import { UserService } from '../../services/user/user.service';
 import { UserVideo } from '../../types/user-video';
 import { UploadDialogComponent } from '../upload-dialog/upload-dialog.component';
@@ -21,7 +21,7 @@ export class VideoManagerComponent implements OnInit {
 	constructor(
 		public dialog: MatDialog,
 		public snackbar: MatSnackBar,
-		public upload: UploadService,
+		public upload: VideoService,
 		public userService: UserService
 	) { }
 

@@ -49,22 +49,26 @@ export class LoginComponent {
     this.loggingIn = true;
     this.userService.login(data).pipe(
       take(1),
-      tap(() => { this.loggingIn = false; }),
       tap((res: User | HttpErrorResponse) => {
         if((res as HttpErrorResponse).message) {
           this.snackBar.open((res as HttpErrorResponse).message, undefined, { duration: 4000 });
+          return;
         }
       }),
-      filter((res: User | HttpErrorResponse): res is User => !!(res as User).email),
-      tap((res: User) => {
-        this.userService.user = res;
-        this.routeToManager();
+      filter((res: User | HttpErrorResponse): res is User => !!(res as User)),
+      tap((user: User) => {
+        this.setUser(user);
+        this.navigateUser(user);
       })
     ).subscribe();
   }
 
-  routeToManager() {
-    this.snackBar.open(`Logged In as ${this.userService.user.name}`, undefined, { duration: 4000 });
+  setUser(user: User) {
+    this.userService.setUser(user);
+  }
+
+  navigateUser(user: User) {
+    this.snackBar.open(`Logged In as ${user.name}`, undefined, { duration: 4000 });
     this.router.navigateByUrl('/videos');
   }
 }
