@@ -28,15 +28,15 @@ export class LoginComponent {
     public userService: UserService,
     public router: Router,
     public snackBar: MatSnackBar
-  ) {}
+  ) { }
 
   signUp() {
     const dialogRef: MatDialogRef<SignUpComponent> = this.dialog.open(SignUpComponent);
 
     dialogRef.afterClosed().pipe(
       tap((res: User | HttpErrorResponse) => {
-        if((res as User)?.email) this.snackBar.open('User created!', undefined, {duration: 4000});
-        if((res as HttpErrorResponse)?.message) this.snackBar.open((res as HttpErrorResponse).message, undefined, { duration: 4000 });
+        if ((res as User)?.email) this.snackBar.open('User created!', undefined, { duration: 4000 });
+        if ((res as HttpErrorResponse)?.message) this.snackBar.open((res as HttpErrorResponse).message, undefined, { duration: 4000 });
       })
     ).subscribe();
   }
@@ -50,8 +50,8 @@ export class LoginComponent {
     this.userService.login(data).pipe(
       shareReplay(),
       tap((res: (User | HttpResponse<HttpErrorResponse>)) => {
-        const error = (res as HttpResponse<HttpErrorResponse>).body; 
-        if(error) {
+        const error = (res as HttpResponse<HttpErrorResponse>).body;
+        if (error) {
           this.snackBar.open(error.message, undefined, { duration: 4000 });
           return;
         }

@@ -1,25 +1,12 @@
-import { Injectable } from "@angular/core";
-import { CanActivate } from "@angular/router";
+import { inject } from "@angular/core";
 import { UserService } from "../services/user/user.service";
-import { SelectSnapshot } from "@ngxs-labs/select-snapshot";
-import { UserState } from "../states/user.state";
-import { User } from "../types/user";
 
-@Injectable()
+export const ManagerGuard = (): boolean => {
 
-export class ManagerGuard implements CanActivate {
+    const userService = inject(UserService);
 
-    @SelectSnapshot(UserState) user: User;
+    if(userService.isValidSession()) return true;
 
-    constructor(
-        private userService: UserService
-    ) {}
-
-    canActivate(): boolean {
-        if(this.userService.isValidSession() === false) {
-            this.userService.logout();
-            return false;
-        }
-        return true;
-    }
+    userService.logout();
+    return false;
 }

@@ -6,12 +6,13 @@ import { ManagerGuard } from './common/guards/view-manager.guard';
 
 const routes: Routes = [
 	{ path: '', component: LoginComponent, pathMatch: 'full' },
+	{ path: '**', redirectTo: ''},
 	{ path: 'videos', component: VideoManagerComponent, canActivate: [ManagerGuard] }
 ];
 
 @NgModule({
 	imports: [RouterModule.forRoot(routes)],
 	exports: [RouterModule],
-	providers: [ManagerGuard]
+	providers: []
 })
 export class AppRoutingModule {}
