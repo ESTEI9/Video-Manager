@@ -1,16 +1,36 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { filter, mergeMap, Observable, of, scan, shareReplay, startWith, Subject, switchMap, tap, take, combineLatest, map } from 'rxjs';
 import { VideoService } from '../../services/video/video.service';
 import { UserService } from '../../services/user/user.service';
 import { UserVideo } from '../../types/user-video';
 import { UploadDialogComponent } from '../upload-dialog/upload-dialog.component';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatButtonModule } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { UserVideosComponent } from '../user-videos/user-videos.component';
+import { SharedVideosComponent } from '../shared-videos/shared-videos.component';
+import { MatIconModule } from '@angular/material/icon';
+import { CommonModule } from '@angular/common';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @Component({
 	selector: 'app-video-manager',
 	templateUrl: './video-manager.component.html',
-	styleUrls: ['./video-manager.component.scss']
+	styleUrls: ['./video-manager.component.scss'],
+	standalone: true,
+	imports: [
+		CommonModule,
+		MatToolbarModule,
+		MatButtonModule,
+		MatIconModule,
+		MatProgressSpinnerModule,
+		UserVideosComponent,
+		SharedVideosComponent,
+		MatDialogModule,
+		MatSnackBarModule
+	]
 })
 export class VideoManagerComponent implements OnInit {
 	videos$: Observable<{videos: UserVideo[], shared: UserVideo[]}> = of({videos: [], shared: []});

@@ -44,7 +44,7 @@ export class VideoService {
 		formData.append('id', video.id.toString());
 		formData.append('title', video.title);
 		if(video.description) formData.append('description', video.description);
-		if(video.tags!?.length !== 1 && video.tags![0] !== "") formData.append('tags', JSON.stringify(video.tags));
+		if(video.tags) formData.append('tags', JSON.stringify(video.tags));
 		const headers = new HttpHeaders().set('Accept', 'application/json');
 
 		return this.http.post<UserVideo>(`${environment.apiBaseUrl}/edit`, formData, { headers });

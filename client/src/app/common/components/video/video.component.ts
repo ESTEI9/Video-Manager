@@ -1,18 +1,36 @@
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { switchMap, Observable, of, tap } from 'rxjs';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { switchMap, Observable, of, tap, filter } from 'rxjs';
 import { VideoService } from '../../services/video/video.service';
 import { UserService } from '../../services/user/user.service';
 import { UserVideo } from '../../types/user-video';
 import { EditVideoComponent } from '../edit-video/edit-video.component';
 import { ShareVideoComponent } from '../share-video/share-video.component';
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-video',
+  standalone: true,
   templateUrl: './video.component.html',
-  styleUrls: ['./video.component.scss']
+  styleUrls: ['./video.component.scss'],
+  imports: [
+    CommonModule,
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    MatMenuModule,
+    MatProgressSpinnerModule,
+    MatDialogModule,
+    MatSnackBarModule
+  ]
 })
+
 export class VideoComponent implements OnInit {
 
   @Input() video!: UserVideo;
@@ -38,9 +56,9 @@ export class VideoComponent implements OnInit {
   editVideo() {
 		const dialogRef = this.dialog.open<EditVideoComponent, UserVideo, UserVideo>(EditVideoComponent, {data: this.video });
 		dialogRef.afterClosed().pipe(
+      filter((res: any): res is UserVideo => !!(res as UserVideo)),
       tap(() => { this.loading = true; }),
-			switchMap((video: UserVideo | undefined): Observable<UserVideo> => {
-				if(typeof video === 'undefined') return of();
+			switchMap((video: UserVideo): Observable<UserVideo> => {
 				return this.VideoService.edit(video as UserVideo);
 			}),
       tap((video: UserVideo) => {
@@ -54,8 +72,9 @@ export class VideoComponent implements OnInit {
   shareVideo() {
     const dialogRef = this.dialog.open<ShareVideoComponent, UserVideo, UserVideo>(ShareVideoComponent, { data: this.video });
     dialogRef.afterClosed().pipe(
+      filter((res: any): res is UserVideo => !!(res as UserVideo)),
       tap(() => { this.loading = true; }),
-			switchMap((video: UserVideo | undefined): Observable<UserVideo> => {
+			switchMap((video: UserVideo): Observable<UserVideo> => {
 				return this.VideoService.share(video as UserVideo);
 			}),
       tap(() => {

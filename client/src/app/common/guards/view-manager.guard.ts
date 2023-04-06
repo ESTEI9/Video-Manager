@@ -5,7 +5,8 @@ export const ManagerGuard = (): boolean => {
 
     const userService = inject(UserService);
 
-    if(userService.isValidSession()) return true;
+    if(userService.isValidSession())
+    return true;
 
     userService.logout();
     return false;

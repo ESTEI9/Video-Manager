@@ -1,11 +1,21 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { UserVideo } from '../../types/user-video';
+import { MatCardModule } from '@angular/material/card';
+import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-share-video',
+  standalone: true,
   templateUrl: './share-video.component.html',
-  styleUrls: ['./share-video.component.scss']
+  styleUrls: ['./share-video.component.scss'],
+  imports: [
+    MatCardModule,
+    MatDialogModule,
+    FormsModule,
+    MatButtonModule
+  ]
 })
 export class ShareVideoComponent implements OnInit {
 
@@ -26,6 +36,6 @@ export class ShareVideoComponent implements OnInit {
   }
 
   cancel() {
-    this.dialogRef.close(this.data);
+    this.dialogRef.close();
   }
 }

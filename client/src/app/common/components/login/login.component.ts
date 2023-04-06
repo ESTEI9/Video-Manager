@@ -1,18 +1,39 @@
-import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { HttpClientModule, HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { Router, RouterModule } from '@angular/router';
 import { UserService } from '../../services/user/user.service';
 import { User } from '../../types/user';
 import { SignUpComponent } from '../sign-up/sign-up.component';
 import { tap, filter, shareReplay } from 'rxjs';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatCardModule } from '@angular/material/card';
+import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserModule } from '@angular/platform-browser';
+import { NgxsModule } from '@ngxs/store';
+import { NgxsSelectSnapshotModule } from '@ngxs-labs/select-snapshot';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.scss'],
+  standalone: true,
+  imports: [
+    CommonModule,
+    MatToolbarModule,
+    MatCardModule,
+    ReactiveFormsModule,
+    MatButtonModule,
+    MatProgressSpinnerModule,
+    MatDialogModule,
+    MatSnackBarModule,
+    RouterModule
+  ]
 })
 export class LoginComponent {
 
@@ -50,13 +71,13 @@ export class LoginComponent {
     this.userService.login(data).pipe(
       shareReplay(),
       tap((res: (User | HttpResponse<HttpErrorResponse>)) => {
-        const error = (res as HttpResponse<HttpErrorResponse>).body;
-        if (error) {
-          this.snackBar.open(error.message, undefined, { duration: 4000 });
+        const error = (res as HttpResponse<HttpErrorResponse>);
+        if (error.status === 401) {
+          this.snackBar.open(error.statusText, undefined, { duration: 4000 });
           return;
         }
       }),
-      filter((res: User | HttpResponse<HttpErrorResponse>): res is User => !!(res as User)),
+      filter((res: User | HttpResponse<HttpErrorResponse>): res is User => !!(res as User).id),
       tap((user: User) => {
         this.setUser(user);
         this.navigateUser(user);

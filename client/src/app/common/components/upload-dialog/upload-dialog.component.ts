@@ -1,16 +1,31 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { sizes } from '../../enums/size.enum';
 import { VideoService } from '../../services/video/video.service';
 import { UserVideo } from '../../types/user-video';
 import { MetaData } from '../../types/metadata';
 import { UserService } from '../../services/user/user.service';
 import { tap } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { FormsModule } from '@angular/forms';
+import { AppMaterialModule } from 'src/app/app-material.module';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
 	selector: 'app-upload-dialog',
+	standalone: true,
 	templateUrl: './upload-dialog.component.html',
-	styleUrls: ['./upload-dialog.component.scss']
+	styleUrls: ['./upload-dialog.component.scss'],
+	imports: [
+		CommonModule,
+		MatDialogModule,
+		MatIconModule,
+		MatProgressSpinnerModule,
+		FormsModule,
+		MatButtonModule
+	]
 })
 export class UploadDialogComponent implements OnInit {
 	@ViewChild('fileInput') fileInput!: ElementRef;
